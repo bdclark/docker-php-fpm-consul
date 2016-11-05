@@ -1,0 +1,11 @@
+{{ $basekey := env "PHP_FPM_CONF_KEY" }}
+[global]
+
+error_log = /proc/self/fd/2
+daemonize = no
+
+; Additional Consul-generated settings below
+{{- $global := printf "%s/global/" $basekey }}{{ if ls $global }}{{ range ls $global }}
+{{ .Key }} = {{ .Value }}{{ end }}{{ end }}
+
+include=/etc/php5/fpm/pool.d/*.conf

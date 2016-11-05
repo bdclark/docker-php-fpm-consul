@@ -1,0 +1,9 @@
+{{ $ini_key := env "PHP_INI_KEY" }}{{ $common_ini_key := env "PHP_INI_COMMON_KEY" }}
+; Timezone from PHP_TIMEZONE
+date.timezone = {{ env  "PHP_TIMEZONE" }}
+; Consul-generated config from PHP_INI_COMMON_KEY
+{{ if $common_ini_key }}{{ if ls $common_ini_key }}{{ range ls $common_ini_key }}
+{{ .Key }} = {{ .Value }}{{ end }}{{ end }}{{ end }}
+; Consul generated config from PHP_INI_KEY
+{{ if $ini_key }}{{ if ls $ini_key }}{{ range ls $ini_key }}
+{{ .Key }} = {{ .Value }}{{ end }}{{ end }}{{ end }}

@@ -1,0 +1,27 @@
+{{ $basekey := env "PHP_FPM_CONF_KEY" }}
+[www]
+
+access.log = /proc/self/fd/2
+
+user = www-data
+group = www-data
+
+listen = [::]:{{ key_or_default (printf "%s/pool/www/listen_port" $basekey) "9000" }}
+
+pm = {{ key_or_default (printf "%s/pool/www/pm" $basekey) "dynamic" }}
+pm.max_children = {{ key_or_default (printf "%s/pool/www/pm.max_children" $basekey) "5" }}
+pm.start_servers = {{ key_or_default (printf "%s/pool/www/pm.start_servers" $basekey) "2" }}
+pm.min_spare_servers = {{ key_or_default (printf "%s/pool/www/pm.min_spare_servers" $basekey) "1" }}
+pm.max_spare_servers = {{ key_or_default (printf "%s/pool/www/pm.max_spare_servers" $basekey) "3" }}
+pm.max_requests = {{ key_or_default (printf "%s/pool/www/pm.max_requests" $basekey) "0" }}
+{{- if (printf "%s/pool/www/pm.status_path" $basekey | key) }}
+pm.status_path = {{ printf "%s/pool/www/pm.status_path" $basekey | key }}{{ end }}
+
+clear_env = no
+
+; Ensure worker stdout and stderr are sent to the main error log.
+catch_workers_output = yes
+
+; Additional Consul-generated settings below
+{{- $pool := printf "%s/pool/www/" $basekey }}{{ if ls $pool }}{{ range ls $pool }}{{ if ne (.Key | regexMatch "^pm\\..+") true  }}
+{{ .Key }} = {{ .Value }}{{ end }}{{ end }}{{ end }}
