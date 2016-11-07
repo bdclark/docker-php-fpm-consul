@@ -27,6 +27,7 @@ RUN wget https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSIO
   && rm consul-template_*.zip
 
 ENV PHP_FPM_CONF_KEY php-fpm
+ENV PHP_FPM_LISTEN_PORT 9000
 ENV PHP_TIMEZONE ${PHP_TIMEZONE:-UTC}
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
