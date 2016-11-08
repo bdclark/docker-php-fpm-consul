@@ -1,4 +1,4 @@
-# php-php-consul Docker image
+# php-fpm-consul Docker image
 
 Docker image that runs PHP-FPM with its configuration driven via
 [Consul-Template][1].
